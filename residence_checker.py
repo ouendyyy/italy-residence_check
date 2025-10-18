@@ -16,6 +16,9 @@ from pathlib import Path
 
 import requests
 
+# BeautifulSoup will be used when implementing actual portal scraping
+# from bs4 import BeautifulSoup
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -150,10 +153,14 @@ class ItalyResidenceChecker:
         
         # Mask sensitive information
         username = self.config.get('username', 'N/A')
-        if len(username) > 4:
-            masked_username = username[:2] + '*' * (len(username) - 4) + username[-2:]
+        if username == 'N/A':
+            masked_username = 'N/A'
+        elif len(username) <= 3:
+            masked_username = '*' * len(username)
+        elif len(username) == 4:
+            masked_username = username[0] + '**' + username[-1]
         else:
-            masked_username = '***'
+            masked_username = username[:2] + '*' * (len(username) - 4) + username[-2:]
         
         print("\n" + "="*50)
         print("Italy Residence Permit Status Check")
