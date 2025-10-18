@@ -31,6 +31,9 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+# Security constants
+MIN_LENGTH_FOR_PARTIAL_MASKING = 4
+
 
 class ItalyResidenceChecker:
     """
@@ -52,6 +55,26 @@ class ItalyResidenceChecker:
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         })
+    
+    @staticmethod
+    def mask_credential(credential):
+        """
+        Mask sensitive credential for display.
+        
+        Args:
+            credential (str): The credential to mask
+            
+        Returns:
+            str: Masked credential
+        """
+        if credential == 'N/A' or not credential:
+            return 'N/A'
+        elif len(credential) <= 3:
+            return '*' * len(credential)
+        elif len(credential) == MIN_LENGTH_FOR_PARTIAL_MASKING:
+            return credential[0] + '**' + credential[-1]
+        else:
+            return credential[:2] + '*' * (len(credential) - 4) + credential[-2:]
     
     def load_config(self, config_path):
         """
@@ -153,14 +176,7 @@ class ItalyResidenceChecker:
         
         # Mask sensitive information
         username = self.config.get('username', 'N/A')
-        if username == 'N/A':
-            masked_username = 'N/A'
-        elif len(username) <= 3:
-            masked_username = '*' * len(username)
-        elif len(username) == 4:
-            masked_username = username[0] + '**' + username[-1]
-        else:
-            masked_username = username[:2] + '*' * (len(username) - 4) + username[-2:]
+        masked_username = self.mask_credential(username)
         
         print("\n" + "="*50)
         print("Italy Residence Permit Status Check")
