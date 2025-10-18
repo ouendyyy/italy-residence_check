@@ -1,3 +1,3 @@
 # italy-residence_check
 一键查询意大利居留
-执行/dist下的exe，输入居留小条的密码就能一键查询居留状态
+下载master分支下的dist文件下下的exe文件并执行，输入居留小条的密码就能一键查询居留状态
