@@ -15,7 +15,6 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
 
 # Configure logging
 logging.basicConfig(
@@ -104,8 +103,7 @@ class ItalyResidenceChecker:
             status_info = {
                 'status': 'pending',
                 'message': 'Status check not yet implemented for real portal',
-                'last_checked': datetime.now().isoformat(),
-                'username': username
+                'last_checked': datetime.now().isoformat()
             }
             
             logger.info(f"Status: {status_info['status']}")
@@ -150,11 +148,18 @@ class ItalyResidenceChecker:
         """
         status = self.check_status()
         
+        # Mask sensitive information
+        username = self.config.get('username', 'N/A')
+        if len(username) > 4:
+            masked_username = username[:2] + '*' * (len(username) - 4) + username[-2:]
+        else:
+            masked_username = '***'
+        
         print("\n" + "="*50)
         print("Italy Residence Permit Status Check")
         print("意大利居留许可状态查询")
         print("="*50)
-        print(f"Username/Receipt: {self.config.get('username', 'N/A')}")
+        print(f"Username/Receipt: {masked_username}")
         print(f"Status: {status['status']}")
         print(f"Message: {status['message']}")
         print(f"Last Checked: {status.get('last_checked', 'N/A')}")
