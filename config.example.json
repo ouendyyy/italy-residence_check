@@ -1,0 +1,9 @@
+{
+  "username": "your_username_or_receipt_number",
+  "password": "your_password_or_tracking_code",
+  "check_interval": 300,
+  "notification": {
+    "enabled": false,
+    "email": "your_email@example.com"
+  }
+}
